@@ -26,14 +26,58 @@ A production-ready AI Support Agent built with **LangGraph**, **FastAPI**, and *
 
 ---
 
-
-### 1. Clone the Repository
 ```bash
+
+### 2. Clone the Repository
+
 git clone [https://github.com/your-username/smartcommerce-ai.git](https://github.com/your-username/smartcommerce-ai.git)
 cd smartcommerce-ai
 
-2. Set Up Environment Variables
+### 2 Set Up Environment Variables
 Create a .env file in the root directory:
+
 
 GROQ_API_KEY=your_groq_api_key_here
 DATABASE_URL=mysql+aiomysql://user:password@localhost/db_name
+
+###  3. Install Dependencies
+Bash
+pip install -r requirements.txt
+
+### 4. Run the Server
+Bash
+uvicorn main:app --reload
+
+## 🤖 Agent Workflow
+
+The AI follows a specific logic flow to ensure accuracy and reliability:
+
+Chatbot Node: Receives input and decides whether to respond or call a tool based on the System Prompt.
+
+Sentiment Analyzer: Evaluates the user's mood. If "Angry," it triggers a state flag for handoff.
+
+Tool Node: Executes Python functions (DB lookups, Ticket creation).
+
+Loopback: After a tool runs, the agent returns to the Chatbot node to explain the result to the user.
+
+
+## Method,Endpoint,Description
+
+POST,/chat,"Main interaction point. Send user_id, session_id, and query."
+GET,/tickets,Retrieve all active support tickets created by the AI.
+
+
+# 📂 Project Structure
+Plaintext
+
+├── agent/
+│   ├── graph.py          # LangGraph workflow definition
+│   ├── state.py          # TypedDict state definitions
+│   └── tools.py          # Database-connected AI tools
+├── database.py           # Async SQLAlchemy engine & session
+├── models.py             # MySQL Tables (User, Order, Ticket, etc.)
+├── main.py               # FastAPI application & Chat routes
+├── schemas.py            # Pydantic request/response models
+└── .env                  # Configuration (Secrets)
+
+
